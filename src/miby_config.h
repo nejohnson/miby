@@ -93,40 +93,6 @@
 #define MIBY_HND_PITCHBEND		( NULL )
 #endif
 
-/** - Channel Mode **/
-
-#ifndef MIBY_HND_CH_ALL_SND_OFF
-#define MIBY_HND_CH_ALL_SND_OFF		( NULL )
-#endif
-
-#ifndef MIBY_HND_CH_RESET_ALL_CTRL
-#define MIBY_HND_CH_RESET_ALL_CTRL	( NULL )
-#endif
-
-#ifndef MIBY_HND_CH_LOCAL
-#define MIBY_HND_CH_LOCAL		( NULL )
-#endif
-
-#ifndef MIBY_HND_CH_ALL_NOTES_OFF
-#define MIBY_HND_CH_ALL_NOTES_OFF	( NULL )
-#endif
-
-#ifndef MIBY_HND_CH_OMNI_OFF
-#define MIBY_HND_CH_OMNI_OFF		( NULL )
-#endif
-
-#ifndef MIBY_HND_CH_OMNI_ON
-#define MIBY_HND_CH_OMNI_ON		( NULL )
-#endif
-
-#ifndef MIBY_HND_CH_MONO_ON
-#define MIBY_HND_CH_MONO_ON		( NULL )
-#endif
-
-#ifndef MIBY_HND_CH_POLY_ON
-#define MIBY_HND_CH_POLY_ON		( NULL )
-#endif
-
 
 #endif /* MIBY_CONFIG_H */
 
