@@ -1,3 +1,4 @@
+# Makefile for simple test harness
 
 OBJS = miby.o testapp.o
 
