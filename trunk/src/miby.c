@@ -145,8 +145,8 @@ void miby_init( miby_t *this, void *v )
     this->sysexstate    = MIBY_SYSEX_IDLE;
 	
 	/* Set the MIDI channel filter to wide open to receive everything. */
-	this->basic_channel = MIBY_CHAN_REAL_TO_ENCD( 1 );
-	this->top_channel   = MIBY_CHAN_REAL_TO_ENCD( 16 );
+    this->basic_channel = MIBY_CHAN_REAL_TO_ENCD( 1 );
+    this->top_channel   = MIBY_CHAN_REAL_TO_ENCD( 16 );
 	
     this->msglen        = 0;
     this->idx           = 0;
@@ -224,7 +224,7 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
         if ( this->sysexstate != MIBY_SYSEX_IDLE )
         {
             /* This is part of a SysEx message.  Go and call the handler,
-             *  which will set this->ptr to 0 to signal successful
+             *  which will set this->idx to 0 to signal successful
              *  consumption of the SysEx data (e.g. this SysEx is for this
              *  device).
              */
@@ -297,15 +297,15 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
 
         /* Channel status bytes have a channel field in then.  Extract it and
          *  then strip out the channel field to normalise the status bytes.
-		 
-		 * Note: this is all done in encoded format, not real format.
+         *
+         * Note: this is all done in encoded format, not real format.
          */
         if ( BYTE_IS_CHAN( rxbyte ) )
         {
             unsigned char chan = rxbyte & MASK_CHAN;
 
             /* Filter out channel messages for channels that are currently 
-			    being ignored.
+                being ignored.
              */
             if ( chan < this->basic_channel || chan > this->top_channel )
                 return;
