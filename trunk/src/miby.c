@@ -101,7 +101,7 @@ static const msghandler_t msg_table[16] = {
     { (handler_t)MIBY_HND_PROG_CHG,    1 },            /* 0C = C0 = Prog Chg */
     { (handler_t)MIBY_HND_CHAN_AT,     1 },            /* 0D = D0 = Chan AT  */
     { (handler_t)MIBY_HND_PITCHBEND,   2 },            /* 0E = E0 = PitchBnd */
-    { (handler_t)MIBY_HND_SYS_EX, MIBY_SYSEX_BUF_LEN } /* 0F = F0 = SysEx    */
+    { (handler_t)MIBY_HND_SYS_EX, MIBY_SYSEX_FIRST_BUF_LEN }  /* 0F=F0=SysEx */
 };
 
 /*****************************************************************************/
@@ -236,15 +236,17 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
                  *  ignored.  Also clear out the status byte while we're at it
                  *  forcing the parser to resync to the next status byte.
                  */
-                this->sysexstate = MIBY_SYSEX_IDLE;
-                this->statusbyte = 0;
+                this->sysexstate   = MIBY_SYSEX_IDLE;
+                this->statusbyte   = 0;
             }
             else
             {
                 /* The chunk was handled successfully so move (if not already)
-                 *  to the MIDdle state.
+                 *  to the MIDdle state and update the message length to the 
+				 *  full size.
                  */
                 this->sysexstate = MIBY_SYSEX_MID;
+				this->msglen     = MIBY_SYSEX_BUF_LEN;
             }
         }
         else /* Not in SysEx mode */
@@ -284,7 +286,7 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
 
             /* Pass the received data to the SysEx handler */
             (this->handler)( this );
-
+			
             /* Then back to IDLE state ready for the start of the next one */
             this->sysexstate = MIBY_SYSEX_IDLE;
 
@@ -294,6 +296,15 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
             if ( rxbyte == MIDI_STATUS_EOX )
                 return;
         }
+		else if ( this->idx )
+		{
+			/* For some reason there is data in the receive buffer that has
+			 *  not been processed.  We can only assume that we missed a status
+			 *  byte or one or more data bytes.  Flag it and carry on.
+			 */
+			 
+			this->err.missing = 1;
+		}
 
         /* Channel status bytes have a channel field in then.  Extract it and
          *  then strip out the channel field to normalise the status bytes.

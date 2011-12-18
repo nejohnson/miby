@@ -2,7 +2,7 @@
 
 OBJS = miby.o testapp.o
 
-CFLAGS = -DMIBY_USER_CONFIG=\"testapp.h\" -I../src -I.
+CFLAGS = -DMIBY_USER_CONFIG=\"testapp.h\" -I../src -I. -g
 
 testapp: $(OBJS)
 	$(CC) $(OBJS) -o $@
@@ -12,3 +12,6 @@ miby.o: ../src/miby.c
 	
 testapp.o: testapp.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm $(OBJS)

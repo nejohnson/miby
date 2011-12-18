@@ -81,9 +81,16 @@ typedef struct miby_s *miby_this_t;
 
 /** Utility macros for the miby_t state data type **/
 
-/** Convert between real channel IDs and encoded channel IDs **/
+/** Convert between real channel IDs and encoded channel IDs.
+ *
+ * The MIDI standard defines the sixteen MIDI channels in the
+ * range 1-16.  The encoding scheme used at the data layer is
+ * to map these onto the range 0-15.  Applications, and users,
+ * should work with the correct MIDI channel numbers, and let
+ * MIBY convert between the real number and the encoded number.
+ **/
 #define MIBY_CHAN_REAL_TO_ENCD(c)	((c)-1)
-#define MIBY_CHAN_ENCD_TO_MIDI(c)	((c)+1)
+#define MIBY_CHAN_ENCD_TO_REAL(c)	((c)+1)
 
 /** -- Get the status byte **/
 #define MIBY_STATUSBYTE(x)          ((x)->statusbyte)
@@ -120,11 +127,14 @@ typedef struct miby_s {
     unsigned char msg_chan;					/** The channel for chan. msgs  **/
     unsigned char sysexstate;				/** Current SysEx state			**/
     unsigned char basic_channel;			/** Encoded basic channel 		**/
-    unsigned char top_channel;				/** Encoded top channel 		**/    
+    unsigned char top_channel;				/** Encoded top channel 		**/
+	struct {								/** Error flags set by parser:  **/
+	    unsigned int missing : 1;			/** - missing data              **/
+	} err;
     int msglen;								/** Maximum length of message 	**/
     int idx;								/** Index into receive buffer	**/
     void (*handler)(struct miby_s *);		/** Current message handler		**/
-    void *v;								/** Opaquie user data 			**/
+    void *v;								/** Opaque user data            **/
     unsigned char buf[MIBY_SYSEX_BUF_LEN];	/** Receive buffer 				**/
 } miby_t;
 
