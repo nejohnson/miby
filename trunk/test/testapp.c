@@ -291,10 +291,10 @@ int main( void )
 
 		printf("[%2.2X]", c);
 		miby_parse( &m, c);
-		if ( m.err.missing )
+		if ( MIBY_ERROR_MISSING_DATA(&m) )
 		{
 			printf( "*** MISSING DATA ***\n" );
-			m.err.missing = 0;
+			MIBY_CLEAR_MISSING_DATA(&m);
 		}
 		printf("\n");
 	}
