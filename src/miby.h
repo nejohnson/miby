@@ -116,6 +116,10 @@ typedef struct miby_s *miby_this_t;
 /** -- Signify that the SysEx message has been successfully processed **/
 #define MIBY_SYSEX_DONE_OK(x)       ((x)->idx=0)
 
+/** Error flags set by the parser.  Must be cleared by the application. **/
+#define MIBY_ERROR_MISSING_DATA(x)	((x)->err.missing)
+#define MIBY_CLEAR_MISSING_DATA(x)	((x)->err.missing=0)
+
 /*****************************************************************************/
 /* Data types                                                                */
 /*****************************************************************************/
