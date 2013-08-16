@@ -140,20 +140,14 @@ static const handler_t rt_handler_table[8] = {
 **/
 void miby_init( miby_t *this, void *v )
 {
-    this->statusbyte    = 0;
-    this->msg_chan      = 0;
-    this->sysexstate    = MIBY_SYSEX_IDLE;
-    
+    memset( this, 0, sizeof( *this ) );
+
     /* Set the MIDI channel filter to wide open to receive everything. */
     this->basic_channel = MIBY_CHAN_REAL_TO_ENCD( 1 );
     this->top_channel   = MIBY_CHAN_REAL_TO_ENCD( 16 );
     
-    this->msglen        = 0;
-    this->idx           = 0;
-    this->handler       = NULL;
+    this->sysexstate    = MIBY_SYSEX_IDLE;    
     this->v             = v;
-
-    memset( this->buf, 0, sizeof( this->buf ) );
 }
 
 /*****************************************************************************/

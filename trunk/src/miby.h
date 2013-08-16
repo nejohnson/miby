@@ -45,7 +45,7 @@ typedef struct miby_s *miby_this_t;
 
 /** Define all the Status Bytes **/
 /** -- Channel **/
-#define MIDI_STATUS_CH_NOTE_OFF 	(0x80)
+#define MIDI_STATUS_CH_NOTE_OFF     (0x80)
 #define MIDI_STATUS_CH_NOTE_ON      (0x90)
 #define MIDI_STATUS_CH_POLY_AT      (0xA0)
 #define MIDI_STATUS_CH_CTRL_CHG     (0xB0)
@@ -89,8 +89,8 @@ typedef struct miby_s *miby_this_t;
  * should work with the correct MIDI channel numbers, and let
  * MIBY convert between the real number and the encoded number.
  **/
-#define MIBY_CHAN_REAL_TO_ENCD(c)	((c)-1)
-#define MIBY_CHAN_ENCD_TO_REAL(c)	((c)+1)
+#define MIBY_CHAN_REAL_TO_ENCD(c)   ((c)-1)
+#define MIBY_CHAN_ENCD_TO_REAL(c)   ((c)+1)
 
 /** -- Get the status byte **/
 #define MIBY_STATUSBYTE(x)          ((x)->statusbyte)
@@ -117,8 +117,8 @@ typedef struct miby_s *miby_this_t;
 #define MIBY_SYSEX_DONE_OK(x)       ((x)->idx=0)
 
 /** Error flags set by the parser.  Must be cleared by the application. **/
-#define MIBY_ERROR_MISSING_DATA(x)	((x)->err.missing)
-#define MIBY_CLEAR_MISSING_DATA(x)	((x)->err.missing=0)
+#define MIBY_ERROR_MISSING_DATA(x)  ((x)->err.missing)
+#define MIBY_CLEAR_MISSING_DATA(x)  ((x)->err.missing=0)
 
 /*****************************************************************************/
 /* Data types                                                                */
@@ -127,19 +127,19 @@ typedef struct miby_s *miby_this_t;
 /** Miby state data type **/
 
 typedef struct miby_s {
-    unsigned char statusbyte;				/** Current status byte			**/
-    unsigned char msg_chan;					/** The channel for chan. msgs  **/
-    unsigned char sysexstate;				/** Current SysEx state			**/
-    unsigned char basic_channel;			/** Encoded basic channel 		**/
-    unsigned char top_channel;				/** Encoded top channel 		**/
-	struct {								/** Error flags set by parser:  **/
-	    unsigned int missing : 1;			/** - missing data              **/
-	} err;
-    int msglen;								/** Maximum length of message 	**/
-    int idx;								/** Index into receive buffer	**/
-    void (*handler)(struct miby_s *);		/** Current message handler		**/
-    void *v;								/** Opaque user data            **/
-    unsigned char buf[MIBY_SYSEX_BUF_LEN];	/** Receive buffer 				**/
+    unsigned char statusbyte;                 /** Current status byte      **/
+    unsigned char msg_chan;                   /** For channel msgs         **/
+    unsigned char sysexstate;                 /** Current SysEx state      **/
+    unsigned char basic_channel;              /** Encoded basic channel    **/
+    unsigned char top_channel;                /** Encoded top channel      **/
+    struct {                                  /** Parser error flags:      **/
+        unsigned int missing : 1;             /** - missing data           **/
+    } err;
+    int msglen;                               /** Maximum message length   **/
+    int idx;                                  /** Index into buf           **/
+    unsigned char buf[MIBY_SYSEX_BUF_LEN];    /** Receive buffer           **/
+    void (*handler)(struct miby_s *);         /** Current message handler  **/
+    void *v;                                  /** Opaque user data         **/
 } miby_t;
 
 /*****************************************************************************/
@@ -151,8 +151,8 @@ typedef struct miby_s {
     Initialise an instance of the MIBY parser.
     
     MIBY itself does no memory allocation.  The caller must create the state 
-	object and pass its address to miby_init().  This allows for the state
-	object to be anywhere in the standard C memory spaces: global, local, etc.
+    object and pass its address to miby_init().  This allows for the state
+    object to be anywhere in the standard C memory spaces: global, local, etc.
     
     @param this     Pointer to MIBY parser state object
     @param v        User-supplied opaque pointer
@@ -182,7 +182,6 @@ extern void miby_init( miby_t * /* this */, void * /* v */ );
     (perhaps with interrupt context) or batched up and processed from a FIFO
     queue in an RTOS.
 
-    
     @param this     Pointer to MIBY parser state object
     @param rxbyte   Byte to process
 **/
