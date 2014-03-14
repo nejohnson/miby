@@ -151,7 +151,7 @@ void test_note_off( miby_this_t this )
 	assert( MIBY_ARG1(this) < 0x80 );
 	
 	printf( NEWTAB "[%02X %02X %02X] ", MIBY_STATUSBYTE(this), MIBY_ARG0(this), MIBY_ARG1(this) );
-	printf( "<Ch.%d> ", MIBY_CHAN(this) + 1 );
+	printf( "<Ch.%d> ", MIBY_CHAN(this) );
 	printf( "Note Off :: note = %02X, vel = %02X\n", MIBY_ARG0(this), MIBY_ARG1(this) );
 }
 
@@ -165,7 +165,7 @@ void test_note_on( miby_this_t this )
 	assert( MIBY_ARG1(this) < 0x80 );
 	
 	printf( NEWTAB "[%02X %02X %02X] ", MIBY_STATUSBYTE(this), MIBY_ARG0(this), MIBY_ARG1(this) );
-	printf( "<Ch.%d> ", MIBY_CHAN(this) + 1 );
+	printf( "<Ch.%d> ", MIBY_CHAN(this) );
 	printf( "Note On :: note = %02X, vel = %02X\n", MIBY_ARG0(this), MIBY_ARG1(this) );
 }
 
@@ -179,7 +179,7 @@ void test_poly_at( miby_this_t this )
 	assert( MIBY_ARG1(this) < 0x80 );
 	
 	printf( NEWTAB "[%02X %02X %02X] ", MIBY_STATUSBYTE(this), MIBY_ARG0(this), MIBY_ARG1(this) );
-	printf( "<Ch.%d> ", MIBY_CHAN(this) + 1 );
+	printf( "<Ch.%d> ", MIBY_CHAN(this) );
 	printf( "Poly Touch :: note = %02X, pressure = %02X\n", MIBY_ARG0(this), MIBY_ARG1(this) );
 }
 
@@ -193,7 +193,7 @@ void test_cc( miby_this_t this )
 	assert( MIBY_ARG1(this) < 0x80 );
 	
 	printf( NEWTAB "[%02X %02X %02X] ", MIBY_STATUSBYTE(this), MIBY_ARG0(this), MIBY_ARG1(this) );
-	printf( "<Ch.%d> ", MIBY_CHAN(this) + 1 );
+	printf( "<Ch.%d> ", MIBY_CHAN(this) );
 	printf( "Ctrl Change :: control # = %02X, value = %02X\n", MIBY_ARG0(this), MIBY_ARG1(this) );
 }
 
@@ -206,7 +206,7 @@ void test_pc( miby_this_t this )
 	assert( MIBY_ARG0(this) < 0x80 );
 	
 	printf( NEWTAB "[%02X %02X] ", MIBY_STATUSBYTE(this), MIBY_ARG0(this) );
-	printf( "<Ch.%d> ", MIBY_CHAN(this) + 1 );
+	printf( "<Ch.%d> ", MIBY_CHAN(this) );
 	printf( "Prog Change :: program # = %02X\n", MIBY_ARG0(this) );
 }
 
@@ -219,7 +219,7 @@ void test_chanat( miby_this_t this )
 	assert( MIBY_ARG0(this) < 0x80 );
 	
 	printf( NEWTAB "[%02X %02X] ", MIBY_STATUSBYTE(this), MIBY_ARG0(this) );
-	printf( "<Ch.%d> ", (MIBY_STATUSBYTE(this) & 0xF) + 1 );
+	printf( "<Ch.%d> ", MIBY_CHAN(this) );
 	printf( "Chan Touch :: pressure = %02X\n", MIBY_ARG0(this) );
 }
 
@@ -233,7 +233,7 @@ void test_pb( miby_this_t this )
 	assert( MIBY_ARG1(this) < 0x80 );
 	
 	printf( NEWTAB "[%02X %02X %02X] ", MIBY_STATUSBYTE(this), MIBY_ARG0(this), MIBY_ARG1(this) );
-	printf( "<Ch.%d> ", MIBY_CHAN(this) + 1 );
+	printf( "<Ch.%d> ", MIBY_CHAN(this) );
 	printf( "Pitchbend :: lsb = %02X, msb = %02X (%04X)\n", 
 					MIBY_ARG0(this), MIBY_ARG1(this),
 					( MIBY_ARG1(this) << 7 ) + MIBY_ARG0(this) );
