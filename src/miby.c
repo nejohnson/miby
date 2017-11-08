@@ -56,6 +56,8 @@
 #define MASK_CHAN                       (0x0F)
 #define MASK_CMD                        (0xF0)
 
+#define STATUS_NULL                     ( 0 )
+
 
 /*****************************************************************************/
 /* Data types                                                                */
@@ -179,8 +181,6 @@ void miby_init( miby_t *this, void *v )
 **/
 void miby_parse( miby_t *this, unsigned char rxbyte )
 {
-    int i;
-
     /* Catch System Realtime messages early - they can appear ANYWHERE in the
      *  stream.
      */
@@ -199,7 +199,7 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
         /* If there is no status byte then this data byte is an orphan, or
          *  noise, so drop it.
          */
-        if ( this->statusbyte == 0 )
+        if ( this->statusbyte == STATUS_NULL )
             return;
 
         /* Append the received byte to the receive buffer */
@@ -223,7 +223,7 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
              *  device).
              */
             (this->handler)( this );
-            if ( this->idx )
+            if ( this->idx != 0 )
             {
                 /* This SysEx chunk caused a problem, so we move back to the
                  *  IDLE state so that the rest of this SysEx message will be
@@ -231,7 +231,7 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
                  *  forcing the parser to resync to the next status byte.
                  */
                 this->sysexstate = MIBY_SYSEX_IDLE;
-                this->statusbyte = 0;
+                this->statusbyte = STATUS_NULL;
             }
             else
             {
@@ -253,7 +253,7 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
              *  message then clear the status byte.
              */
             if ( !BYTE_IS_CHAN( this->statusbyte ) )
-                this->statusbyte = 0;
+                this->statusbyte = STATUS_NULL;
         }
 
         /* Message processed, reset the receive buffer */
@@ -261,8 +261,10 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
     }
     else /* This is a status byte ********************************************/
     {
+        unsigned char i;
+
         /* Reset the status byte field ready for the new one */
-        this->statusbyte = 0;
+        this->statusbyte = STATUS_NULL;
 
         /* If we are in the middle of a SysEx message then we need to terminate
          *  it somehow.
@@ -290,7 +292,7 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
             if ( rxbyte == MIDI_STATUS_EOX )
                 return;
         }
-        else if ( this->idx )
+        else if ( this->idx != 0 )
         {
             /* For some reason there is data in the receive buffer that has
              *  not been processed.  We can only assume that we missed a status

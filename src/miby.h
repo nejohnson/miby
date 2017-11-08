@@ -71,7 +71,6 @@ typedef struct miby_s *miby_this_t;
 #define MIDI_STATUS_RT_ACT_SENS     (0xFE)
 #define MIDI_STATUS_RT_SYS_RESET    (0xFF)
 
-
 /** SysEx States **/
 #define MIBY_SYSEX_IDLE             ( 0 )
 #define MIBY_SYSEX_START            ( 1 )
@@ -135,9 +134,9 @@ typedef struct miby_s {
     struct {                                  /** Parser error flags:      **/
         unsigned int missing : 1;             /** - missing data           **/
     } err;
-    int msglen;                               /** Maximum message length   **/
-    int idx;                                  /** Index into buf           **/
-    unsigned char buf[MIBY_SYSEX_BUF_LEN];    /** Receive buffer           **/
+    unsigned int msglen;                      /** Maximum message length   **/
+    unsigned int idx;                         /** Index into buf           **/
+    unsigned char buf[MIBY_SYSEX_BUF_LEN];    /** SysEx receive buffer     **/
     void (*handler)(struct miby_s *);         /** Current message handler  **/
     void *v;                                  /** Opaque user data         **/
 } miby_t;
