@@ -103,6 +103,9 @@ typedef struct miby_s *miby_this_t;
 /** -- Get the message channel, in real numbers **/
 #define MIBY_CHAN(x)                (MIBY_CHAN_ENCD_TO_REAL((x)->msg_chan))
 
+/** -- Get the message channel, in raw numbers **/
+#define MIBY_CHAN_RAW(x)			((x)->msg_chan)
+
 /** -- Get the length of a SysEx chunk **/
 #define MIBY_SYSEX_LEN(x)           ((x)->idx)
 
@@ -115,9 +118,15 @@ typedef struct miby_s *miby_this_t;
 /** -- Signify that the SysEx message has been successfully processed **/
 #define MIBY_SYSEX_DONE_OK(x)       ((x)->idx=0)
 
-/** Error flags set by the parser.  Must be cleared by the application. **/
+/** -- Error flags set by the parser.  Must be cleared by the application. **/
 #define MIBY_ERROR_MISSING_DATA(x)  ((x)->err.missing)
 #define MIBY_CLEAR_MISSING_DATA(x)  ((x)->err.missing=0)
+
+/** -- Set the basic channel **/
+#define MIBY_SET_BASIC_CHAN(x,ch)	((x)->basic_channel=(ch))
+
+/** -- Set the top channel **/
+#define MIBY_SET_TOP_CHAN(x,ch)		((x)->top_channel=(ch))
 
 /*****************************************************************************/
 /* Data types                                                                */
@@ -128,7 +137,9 @@ typedef struct miby_s *miby_this_t;
 typedef struct miby_s {
     unsigned char statusbyte;                 /** Current status byte      **/
     unsigned char msg_chan;                   /** For channel msgs         **/
+#ifdef MIBY_WITH_SYSEX	
     unsigned char sysexstate;                 /** Current SysEx state      **/
+#endif	
     unsigned char basic_channel;              /** Encoded basic channel    **/
     unsigned char top_channel;                /** Encoded top channel      **/
     struct {                                  /** Parser error flags:      **/
@@ -136,7 +147,7 @@ typedef struct miby_s {
     } err;
     unsigned int msglen;                      /** Maximum message length   **/
     unsigned int idx;                         /** Index into buf           **/
-    unsigned char buf[MIBY_SYSEX_BUF_LEN];    /** SysEx receive buffer     **/
+    unsigned char buf[MIBY_RX_BUF_LEN];       /** Receive buffer           **/
     void (*handler)(struct miby_s *);         /** Current message handler  **/
     void *v;                                  /** Opaque user data         **/
 } miby_t;

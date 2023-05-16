@@ -103,7 +103,11 @@ static const msghandler_t msg_table[16] = {
     { (handler_t)MIBY_HND_PROG_CHG,    1 },            /* 0C = C0 = Prog Chg */
     { (handler_t)MIBY_HND_CHAN_AT,     1 },            /* 0D = D0 = Chan AT  */
     { (handler_t)MIBY_HND_PITCHBEND,   2 },            /* 0E = E0 = PitchBnd */
+#ifdef MIBY_WITH_SYSEX	
     { (handler_t)MIBY_HND_SYS_EX, MIBY_SYSEX_FIRST_BUF_LEN }  /* 0F=F0=SysEx */
+#else
+	{ (handler_t)NULL,                 0 }             /* 0F=F0=SysEx        */
+#endif	
 };
 
 /*****************************************************************************/
@@ -148,7 +152,9 @@ void miby_init( miby_t *this, void *v )
     this->basic_channel = MIBY_CHAN_REAL_TO_ENCD( 1 );
     this->top_channel   = MIBY_CHAN_REAL_TO_ENCD( 16 );
     
-    this->sysexstate    = MIBY_SYSEX_IDLE;    
+#ifdef MIBY_WITH_SYSEX	
+    this->sysexstate    = MIBY_SYSEX_IDLE;
+#endif
     this->v             = v;
 }
 
@@ -211,6 +217,7 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
         if ( this->idx < this->msglen )
             return;
 
+#ifdef MIBY_WITH_SYSEX
         /* Ok, at this point we have received all the data bytes we are
          *  expecting.
          * First check if we are in the midst of a SysEx message.
@@ -240,10 +247,11 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
                  *  full size.
                  */
                 this->sysexstate = MIBY_SYSEX_MID;
-                this->msglen     = MIBY_SYSEX_BUF_LEN;
+                this->msglen     = MIBY_RX_BUF_LEN;
             }
-        }
+        }		
         else /* Not in SysEx mode */
+#endif /* MIBY_WITH_SYSEX */		
         {
             /* This is any other message, so just call its handler */
             (this->handler)( this );
@@ -266,6 +274,7 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
         /* Reset the status byte field ready for the new one */
         this->statusbyte = STATUS_NULL;
 
+#ifdef MIBY_WITH_SYSEX
         /* If we are in the middle of a SysEx message then we need to terminate
          *  it somehow.
          */
@@ -292,7 +301,9 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
             if ( rxbyte == MIDI_STATUS_EOX )
                 return;
         }
-        else if ( this->idx != 0 )
+        else 
+#endif /* MIBY_WITH_SYSEX */
+		if ( this->idx != 0 )
         {
             /* For some reason there is data in the receive buffer that has
              *  not been processed.  We can only assume that we missed a status
@@ -302,7 +313,7 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
             this->err.missing = 1;
         }
 
-        /* Channel status bytes have a channel field in then.  Extract it and
+        /* Channel status bytes have a channel field in them.  Extract it and
          *  then strip out the channel field to normalise the status bytes.
          *
          * Note: this is all done in encoded format, not real format.
@@ -344,16 +355,18 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
         }
 
         /* Prepare the parser to process this message, setting up the
-         *  statusbyte field and reseting the receive buffer.
+         *  statusbyte field and resetting the receive buffer.
          */
         this->statusbyte = rxbyte;
         this->idx = 0;
 
+#ifdef MIBY_WITH_SYSEX
         /* Finally, check if this is the start of a SysEx message */
         if ( this->statusbyte == MIDI_STATUS_SYSEX )
         {
             this->sysexstate = MIBY_SYSEX_START;
         }
+#endif		
     }
 }
 

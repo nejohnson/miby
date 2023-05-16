@@ -32,14 +32,27 @@
 #ifndef MIBY_CONFIG_H
 #define MIBY_CONFIG_H
 
+/****************************************************************************
+ * Pull in project-specific settings, just define MIBY_USER_CONFIG to the 
+ * name of your control file; e.g.,
+ *		-DMIBY_USER_CONFIG=\"my_miby_config.h\"
+ ****************************************************************************/
 #ifdef MIBY_USER_CONFIG
 #include MIBY_USER_CONFIG
 #endif
 
+/****************************************************************************
+ * SYSEX is a large section of MIBY and so it can be optionally removed by
+ * adding
+ *		#define MIBY_NO_SYSEX
+ * to your user config file.
+ ****************************************************************************/
+#ifndef MIBY_NO_SYSEX
+#define MIBY_WITH_SYSEX
 
-/** Maximum length of SysEx Receive Buffer **/
-#ifndef MIBY_SYSEX_BUF_LEN
-#define MIBY_SYSEX_BUF_LEN          ( 128 )
+/** Maximum length of Receive Buffer **/
+#ifndef MIBY_RX_BUF_LEN
+#define MIBY_RX_BUF_LEN             ( 128 )
 #endif
 
 /** Initial length of SysEx message chunk **/
@@ -56,6 +69,15 @@
 #define MIBY_SYSEX_FIRST_BUF_LEN	( 3 )
 #endif
 
+#else /* MIBY_NO_SYSEX */
+	
+/** Maximum length of Receive Buffer in non-Sysex configuration **/
+#ifndef MIBY_RX_BUF_LEN
+#define MIBY_RX_BUF_LEN             ( 2 )
+#endif
+
+#endif /* MIBY_NO_SYSEX */
+/****************************************************************************/
 
 /** Provide default values for handler names **/
 
