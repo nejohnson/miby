@@ -1,6 +1,6 @@
 /* ****************************************************************************
  * Miby - MIDI Bytestream Parser for Embedded Systems
- * Copyright (C) 2010, Neil Johnson <http://www.njohnson.co.uk>
+ * Copyright (C) 2010-2023, Neil Johnson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms,
@@ -69,12 +69,23 @@
 #define MIBY_SYSEX_FIRST_BUF_LEN	( 3 )
 #endif
 
-#else /* MIBY_NO_SYSEX */
-	
-/** Maximum length of Receive Buffer in non-Sysex configuration **/
-#ifndef MIBY_RX_BUF_LEN
-#define MIBY_RX_BUF_LEN             ( 2 )
+#ifndef MIBY_HND_SYS_EX
+#define MIBY_HND_SYS_EX             ( NULL )
 #endif
+
+#else /* MIBY_NO_SYSEX */
+
+/** Force no-sysex overrides **/
+#undef MIBY_RX_BUF_LEN
+#undef MIBY_SYSEX_FIRST_BUF_LEN
+#undef MIBY_HND_SYS_EX
+
+/** Maximum length of Receive Buffer in non-Sysex configuration **/
+#define MIBY_RX_BUF_LEN             ( 2 )
+/** No continuation buffer **/
+#define MIBY_SYSEX_FIRST_BUF_LEN	( 0 )
+/** No Sysex handler **/
+#define MIBY_HND_SYS_EX             ( NULL )
 
 #endif /* MIBY_NO_SYSEX */
 /****************************************************************************/
@@ -124,11 +135,7 @@
 #define MIBY_HND_SYS_TUNEREQ        ( NULL )
 #endif
 
-/** - System Exclusive **/
 
-#ifndef MIBY_HND_SYS_EX
-#define MIBY_HND_SYS_EX             ( NULL )
-#endif
 
 /** - Channel Voice **/
 

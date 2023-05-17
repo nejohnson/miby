@@ -1,6 +1,6 @@
 /* ****************************************************************************
  * Miby - MIDI Bytestream Parser for Embedded Systems
- * Copyright (C) 2010, Neil Johnson <http://www.njohnson.co.uk>
+ * Copyright (C) 2010-2023, Neil Johnson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms,

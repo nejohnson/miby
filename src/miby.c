@@ -1,6 +1,6 @@
 /* ****************************************************************************
  * Miby - MIDI Bytestream Parser for Embedded Systems
- * Copyright (C) 2010, Neil Johnson <http://www.njohnson.co.uk>
+ * Copyright (C) 2010-2023, Neil Johnson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms,
@@ -58,7 +58,6 @@
 
 #define STATUS_NULL                     ( 0 )
 
-
 /*****************************************************************************/
 /* Data types                                                                */
 /*****************************************************************************/
@@ -103,11 +102,7 @@ static const msghandler_t msg_table[16] = {
     { (handler_t)MIBY_HND_PROG_CHG,    1 },            /* 0C = C0 = Prog Chg */
     { (handler_t)MIBY_HND_CHAN_AT,     1 },            /* 0D = D0 = Chan AT  */
     { (handler_t)MIBY_HND_PITCHBEND,   2 },            /* 0E = E0 = PitchBnd */
-#ifdef MIBY_WITH_SYSEX	
     { (handler_t)MIBY_HND_SYS_EX, MIBY_SYSEX_FIRST_BUF_LEN }  /* 0F=F0=SysEx */
-#else
-	{ (handler_t)NULL,                 0 }             /* 0F=F0=SysEx        */
-#endif	
 };
 
 /*****************************************************************************/
@@ -180,7 +175,6 @@ void miby_init( miby_t *this, void *v )
     The parser is called for each received byte, either as it is received
     (perhaps with interrupt context) or batched up and processed from a FIFO
     queue in an RTOS.
-
     
     @param this     Pointer to MIBY parser state object
     @param rxbyte   Byte to process
