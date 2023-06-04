@@ -42,6 +42,24 @@
 #endif
 
 /****************************************************************************
+ * Miby is designed for use in embedded systems, which often have limited RAM
+ * but more ROM/FLASH.  The two handler tables should be placed in the right
+ * place to minimise RAM usage.
+ * For example, on AVR using avr-gcc and Avr LibC you would define them as
+ *
+ * #define MIBY_READONLY				PROGMEM
+ * #define MIBY_GET_RO_WORD(a)			pgm_read_word(&(a))
+ ****************************************************************************/
+
+#ifndef MIBY_READONLY
+#define MIBY_READONLY
+#endif
+
+#ifndef MIBY_GET_RO_WORD
+#define MIBY_GET_RO_WORD(a)	(a)
+#endif 
+
+/****************************************************************************
  * SYSEX is a large section of MIBY and so it can be optionally removed by
  * adding
  *		#define MIBY_NO_SYSEX
