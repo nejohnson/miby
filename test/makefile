@@ -1,7 +1,7 @@
 # Makefile for simple test harness
 
 TESTAPP_OBJS = miby.o testapp.o
-PARSER_TEST_OBJS = miby_parser_tests.o parser_tests.o
+PARSER_TEST_OBJS = miby_parser_tests.o miby_cc_parser_tests.o parser_tests.o
 
 CFLAGS ?= -g
 CPPFLAGS = -I../src -I.
@@ -21,6 +21,9 @@ testapp.o: testapp.c
 	$(CC) $(CPPFLAGS) -DMIBY_USER_CONFIG=\"testapp.h\" $(CFLAGS) -c $< -o $@
 
 miby_parser_tests.o: ../src/miby.c parser_tests.h
+	$(CC) $(CPPFLAGS) -DMIBY_USER_CONFIG=\"parser_tests.h\" $(CFLAGS) $(WARNFLAGS) -c $< -o $@
+
+miby_cc_parser_tests.o: ../src/miby_cc.c parser_tests.h
 	$(CC) $(CPPFLAGS) -DMIBY_USER_CONFIG=\"parser_tests.h\" $(CFLAGS) $(WARNFLAGS) -c $< -o $@
 
 parser_tests.o: parser_tests.c parser_tests.h

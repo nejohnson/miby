@@ -78,6 +78,28 @@ typedef struct miby_s *miby_this_t;
 #define MIBY_SYSEX_END              ( 3 )
 #define MIBY_SYSEX_ABORT            ( 4 )
 
+/** Continuous Controller event types **/
+#define MIBY_CC_EVENT_NONE          ( 0 )
+#define MIBY_CC_EVENT_7BIT          ( 1 )
+#define MIBY_CC_EVENT_14BIT         ( 2 )
+#define MIBY_CC_EVENT_SWITCH        ( 3 )
+#define MIBY_CC_EVENT_PARAMETER     ( 4 )
+#define MIBY_CC_EVENT_MODE          ( 5 )
+
+/** Continuous Controller parameter selection **/
+#define MIBY_CC_PARAM_NONE          ( 0 )
+#define MIBY_CC_PARAM_RPN           ( 1 )
+#define MIBY_CC_PARAM_NRPN          ( 2 )
+
+/** Continuous Controller parameter actions **/
+#define MIBY_CC_ACTION_SET          ( 0 )
+#define MIBY_CC_ACTION_INCREMENT    ( 1 )
+#define MIBY_CC_ACTION_DECREMENT    ( 2 )
+
+/** Continuous Controller event flags **/
+#define MIBY_CC_VALUE_HAS_MSB       ( 0x01 )
+#define MIBY_CC_VALUE_HAS_LSB       ( 0x02 )
+
 /** Utility macros for the miby_t state data type **/
 
 /** Convert between real channel IDs and encoded channel IDs.
@@ -128,11 +150,56 @@ typedef struct miby_s *miby_this_t;
 /** -- Set the top channel **/
 #define MIBY_SET_TOP_CHAN(x,ch)		((x)->top_channel=MIBY_CHAN_REAL_TO_ENCD(ch))
 
+/** -- Get the Continuous Controller helper state from the parser userdata **/
+#ifndef MIBY_CC_GET_STATE
+#define MIBY_CC_GET_STATE(x)        ((miby_cc_t *)((x)->v))
+#endif
+
+/** -- Get the current Continuous Controller event **/
+#define MIBY_CC_EVENT(x)            (&(MIBY_CC_GET_STATE(x)->event))
+
 /*****************************************************************************/
 /* Data types                                                                */
 /*****************************************************************************/
 
 /** Miby state data type **/
+
+typedef struct miby_cc_channel_s {
+    unsigned char cc_msb[32];
+    unsigned char cc_lsb[32];
+    unsigned long cc_msb_valid;
+    unsigned long cc_lsb_valid;
+    unsigned char rpn_msb;
+    unsigned char rpn_lsb;
+    unsigned char nrpn_msb;
+    unsigned char nrpn_lsb;
+    unsigned char rpn_valid;
+    unsigned char nrpn_valid;
+    unsigned char selected_param;
+    unsigned short selected_number;
+    unsigned char data_msb;
+    unsigned char data_lsb;
+    unsigned char data_valid;
+} miby_cc_channel_t;
+
+typedef struct miby_cc_event_s {
+    unsigned char type;
+    unsigned char action;
+    unsigned char channel;
+    unsigned char controller;
+    unsigned char value_msb;
+    unsigned char value_lsb;
+    unsigned char switch_on;
+    unsigned char parameter_type;
+    unsigned char flags;
+    unsigned short parameter;
+    unsigned short value;
+} miby_cc_event_t;
+
+typedef struct miby_cc_s {
+    miby_cc_channel_t channel[16];
+    miby_cc_event_t event;
+} miby_cc_t;
 
 typedef struct miby_s {
     unsigned char statusbyte;                 /** Current status byte      **/
@@ -196,6 +263,9 @@ extern void miby_init( miby_t * /* this */, void * /* v */ );
     @param rxbyte   Byte to process
 **/
 extern void miby_parse( miby_t * /* this */, unsigned char /* rxbyte */ );
+
+extern void miby_cc_init( miby_cc_t * /* cc */ );
+extern void miby_cc( miby_this_t /* this */ );
 
 /*****************************************************************************/
 /*****************************************************************************/

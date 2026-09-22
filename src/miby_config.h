@@ -1,6 +1,6 @@
 /* ****************************************************************************
  * Miby - MIDI Bytestream Parser for Embedded Systems
- * Copyright (C) 2010-2023, Neil Johnson
+ * Copyright (C) 2010-2026, Neil Johnson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms,
@@ -173,6 +173,26 @@
 #define MIBY_HND_CTRL_CHG           ( NULL )
 #endif
 
+#ifndef MIBY_HND_CC_7BIT
+#define MIBY_HND_CC_7BIT            ( NULL )
+#endif
+
+#ifndef MIBY_HND_CC_14BIT
+#define MIBY_HND_CC_14BIT           ( NULL )
+#endif
+
+#ifndef MIBY_HND_CC_SWITCH
+#define MIBY_HND_CC_SWITCH          ( NULL )
+#endif
+
+#ifndef MIBY_HND_CC_PARAMETER
+#define MIBY_HND_CC_PARAMETER       ( NULL )
+#endif
+
+#ifndef MIBY_HND_CC_MODE
+#define MIBY_HND_CC_MODE            ( NULL )
+#endif
+
 #ifndef MIBY_HND_PROG_CHG
 #define MIBY_HND_PROG_CHG           ( NULL )
 #endif
@@ -187,4 +207,3 @@
 
 
 #endif /* MIBY_CONFIG_H */
-
