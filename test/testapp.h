@@ -1,6 +1,6 @@
 /* ****************************************************************************
  * Miby - MIDI Bytestream Parser for Embedded Systems
- * Copyright (C) 2010, Neil Johnson <http://www.njohnson.co.uk>
+ * Copyright (C) 2010-2026, Neil Johnson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms,
@@ -54,7 +54,7 @@ extern void test_rt_system_reset( miby_this_t );
 #define MIBY_HND_RT_SYS_RESET	test_rt_system_reset
 
 extern void test_tunereq( miby_this_t );
-#define MIBY_HND_SYS_TIMEREQ	test_tunereq
+#define MIBY_HND_SYS_TUNEREQ	test_tunereq
 
 extern void test_mtc( miby_this_t );
 #define MIBY_HND_SYS_MTC	test_mtc

@@ -1,6 +1,6 @@
 /* ****************************************************************************
  * Miby - MIDI Bytestream Parser for Embedded Systems
- * Copyright (C) 2010-2023, Neil Johnson
+ * Copyright (C) 2010-2026, Neil Johnson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms,
@@ -123,10 +123,10 @@ typedef struct miby_s *miby_this_t;
 #define MIBY_CLEAR_MISSING_DATA(x)  ((x)->err.missing=0)
 
 /** -- Set the basic channel **/
-#define MIBY_SET_BASIC_CHAN(x,ch)	((x)->basic_channel=(ch))
+#define MIBY_SET_BASIC_CHAN(x,ch)	((x)->basic_channel=MIBY_CHAN_REAL_TO_ENCD(ch))
 
 /** -- Set the top channel **/
-#define MIBY_SET_TOP_CHAN(x,ch)		((x)->top_channel=(ch))
+#define MIBY_SET_TOP_CHAN(x,ch)		((x)->top_channel=MIBY_CHAN_REAL_TO_ENCD(ch))
 
 /*****************************************************************************/
 /* Data types                                                                */

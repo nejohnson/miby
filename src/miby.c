@@ -1,6 +1,6 @@
 /* ****************************************************************************
  * Miby - MIDI Bytestream Parser for Embedded Systems
- * Copyright (C) 2010-2023, Neil Johnson
+ * Copyright (C) 2010-2026, Neil Johnson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms,
@@ -290,6 +290,7 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
             
             /* Then back to IDLE state ready for the start of the next one */
             this->sysexstate = MIBY_SYSEX_IDLE;
+            this->idx = 0;
 
             /* If this status byte is EOX then we consume it here.  Any other
              *  status byte needs to be further processed.
@@ -307,6 +308,7 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
              */
              
             this->err.missing = 1;
+            this->idx = 0;
         }
 
         /* Channel status bytes have a channel field in them.  Extract it and
@@ -343,18 +345,20 @@ void miby_parse( miby_t *this, unsigned char rxbyte )
         /* For a message with a handler get the required number of data bytes */
         this->msglen = MIBY_GET_RO_WORD(msg_table[i].len);
 
-        /* For messages with no data bytes we handle them here directly */
-        if ( this->msglen == 0 )
-        {
-            (this->handler)( this );
-            return;
-        }
-
         /* Prepare the parser to process this message, setting up the
          *  statusbyte field and resetting the receive buffer.
          */
         this->statusbyte = rxbyte;
         this->idx = 0;
+
+        /* For messages with no data bytes we handle them here directly */
+        if ( this->msglen == 0 )
+        {
+            (this->handler)( this );
+            if ( !BYTE_IS_CHAN( this->statusbyte ) )
+                this->statusbyte = STATUS_NULL;
+            return;
+        }
 
 #ifdef MIBY_WITH_SYSEX
         /* Finally, check if this is the start of a SysEx message */
